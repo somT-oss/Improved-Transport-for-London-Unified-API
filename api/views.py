@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from pip import main
 from rest_framework.decorators import api_view
-# from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework import status
 from pymongo import MongoClient
@@ -21,7 +21,7 @@ def connect_to_mongo():
     print("Connected to mongo successfully")
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_accidents_stats(request, year):
     connect_to_mongo()
@@ -39,7 +39,7 @@ def get_accidents_stats(request, year):
     return Response(main_list)
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_accidents_stats_with_range(request, year, start_date, end_date):
     if request.method != 'GET':
@@ -54,7 +54,7 @@ def get_accidents_stats_with_range(request, year, start_date, end_date):
     return Response(main_list[start_date:(end_date+1)])
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_bike_points(request):
     if request.method != 'GET':
@@ -69,13 +69,13 @@ def get_bike_points(request):
     return Response(main_list, status=status.HTTP_200_OK)
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_bike_point_id():
     pass 
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_points(request, start_point, end_point):
     if request.method != 'GET':
@@ -90,7 +90,7 @@ def get_journey_planner_by_points(request, start_point, end_point):
     return Response(new_dict, status=status.HTTP_200_OK)
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_ics_code(request, start_code, end_code):
     if request.method != 'GET':
@@ -104,8 +104,8 @@ def get_journey_planner_by_ics_code(request, start_code, end_code):
     
     return Response(new_dict, status=status.HTTP_200_OK)
 
-
-# @cache_page(60*15)
+ 
+@cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_geo_and_postcode(request, lat, log):
     if request.method != 'GET':
@@ -120,7 +120,7 @@ def get_journey_planner_by_geo_and_postcode(request, lat, log):
     return Response(new_dict, status=status.HTTP_200_OK)
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_all_corridors(request):
     connect_to_mongo()
@@ -135,7 +135,7 @@ def get_all_corridors(request):
     return Response(main_list, status=status.HTTP_200_OK)
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_corridor_by_id(request, pk):
     connect_to_mongo()
@@ -149,7 +149,7 @@ def get_corridor_by_id(request, pk):
     return Response(corridor, status=status.HTTP_200_OK)
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_all_disrupted_roads(request):
     connect_to_mongo()
@@ -165,7 +165,7 @@ def get_all_disrupted_roads(request):
 
 
 
-# @cache_page(60*15)
+@cache_page(60*15)
 @api_view(['GET'])
 def get_all_serious_disrupted_roads(request):
     if request.method != 'GET':
