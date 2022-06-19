@@ -93,13 +93,13 @@ def get_journey_planner_by_ics_code(request, start_code, end_code):
     return Response(new_dict, status=status.HTTP_200_OK)
     
 @api_view(['GET'])
-def get_journey_planner_by_geo_and_postcode(request, lat, long):
+def get_journey_planner_by_geo_and_postcode(request, lat, log):
     if request.method != 'GET':
         return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
-    url = f'https://api.tfl.gov.uk/journey/journeyresults/{start_code}/to/{end_code}'
+    url = f'https://api.tfl.gov.uk/journey/journeyresults/{lat}/to/{log}'
     r = requests.get(url)
     if r.status_code != 200:
-        return Response({"Error": f"Could not get information on how to plan a route from {start_code} to {end_code}"}, status=status.HTTP_200_OK)
+        return Response({"Error": f"Could not get information on how to plan a route from {lat} to {log}"}, status=status.HTTP_200_OK)
     text = r.text 
     new_dict = json.loads(text)
 
@@ -137,9 +137,32 @@ def get_all_disrupted_roads(request):
         return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
     cursor = db['disrupted-roads']
     main_list = []
-    for documents in cursor:
+    for documents in cursor.find({}):
         del documents['_id']
         main_list.append(documents)
 
     return Response(main_list, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def get_all_serious_disrupted_roads(request):
+    if request.method != 'GET':
+        return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST) 
+    url = "https://api.tfl.gov.uk/Road/All/Disruption?severities=Serious"
+    r = requests.get(url)
+    if r.status_code != 200:
+        return Response({"Error": "An error occured, try again"}, status=status.HTTP_200_OK)
+    text = r.text
+    new_list = json.loads(text)
+
+    return Response(new_list, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_one_line(request, line):
+    if request.method != 'GET':
+        return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
+    url = f"https://api.tfl.gov.uk/Line/{line}"
+    r = requests.get(url)
+    text = r.text
+    new_list = json.loads(text)
+
+    return Response(new_list, status=status.HTTP_200_OK)

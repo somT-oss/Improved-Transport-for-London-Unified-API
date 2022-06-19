@@ -180,7 +180,7 @@ new_list = json.loads(text)
 #     json.dump(new_list, f)
 
 collection = db['disrupted-roads']
-for coll in collection.find({}):
+for coll in collection.find({"severity": "Serious"}):
     print(coll)
 
 
