@@ -61,7 +61,7 @@ def get_accidents_stats_with_range(request, year, start_range, end_range):
 
 
 @swagger_auto_schema(method='GET')
-@cache_page(60*15)
+@cache_page(60*60)
 @api_view(['GET'])
 def get_bike_points(request):
     if request.method != 'GET':
@@ -193,7 +193,7 @@ def get_all_disrupted_roads(request):
 
 
 @swagger_auto_schema(method='GET')
-@cache_page(60*15)
+@cache_page(60*60)
 @api_view(['GET'])
 def get_all_serious_disrupted_roads(request):
     if request.method != 'GET':
