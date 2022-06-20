@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from pip import main
 from rest_framework.decorators import api_view
 from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from rest_framework import status
 from pymongo import MongoClient
 import requests
@@ -21,6 +21,8 @@ def connect_to_mongo():
     print("Connected to mongo successfully")
 
 
+year = openapi.Parameter('test', openapi.IN_QUERY, description="year parameter for accident stats", type=openapi.TYPE_STRING)
+@swagger_auto_schema(method='GET', manual_parameters=[year])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_accidents_stats(request, year):
@@ -39,9 +41,13 @@ def get_accidents_stats(request, year):
     return Response(main_list)
 
 
+year = openapi.Parameter('year', openapi.IN_QUERY, description="year parameter for accident stats", type=openapi.TYPE_STRING)
+start_range = openapi.Parameter('start_range', openapi.IN_QUERY, description='start range of data in a year\'s accident stat', type=openapi.TYPE_INTEGER)
+end_range = openapi.Parameter('end_range', openapi.IN_QUERY, description='end range of data in a year\'s accident stat', type=openapi.TYPE_INTEGER)
+@swagger_auto_schema(method='GET', manual_parameters=[year, start_range, end_range])
 @cache_page(60*15)
 @api_view(['GET'])
-def get_accidents_stats_with_range(request, year, start_date, end_date):
+def get_accidents_stats_with_range(request, year, start_range, end_range):
     if request.method != 'GET':
         return Response({"Error": "Invalid Response Type"})
     url = f'https://api.tfl.gov.uk/AccidentStats/{year}'
@@ -51,9 +57,10 @@ def get_accidents_stats_with_range(request, year, start_date, end_date):
     text = r.text 
     main_list = json.loads(text)
 
-    return Response(main_list[start_date:(end_date+1)])
+    return Response(main_list[start_range:(end_range+1)])
 
 
+@swagger_auto_schema(method='GET')
 @cache_page(60*15)
 @api_view(['GET'])
 def get_bike_points(request):
@@ -75,6 +82,9 @@ def get_bike_point_id():
     pass 
 
 
+start_point = openapi.Parameter('start_pint', openapi.IN_QUERY, description='start point of your journey', type=openapi.TYPE_NUMBER)
+end_point = openapi.Parameter('end_point', openapi.IN_QUERY, description='end point of your journey', type=openapi.TYPE_NUMBER)
+@swagger_auto_schema(method='GET', manual_parameters=[start_point, end_point])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_points(request, start_point, end_point):
@@ -90,6 +100,9 @@ def get_journey_planner_by_points(request, start_point, end_point):
     return Response(new_dict, status=status.HTTP_200_OK)
 
 
+start_code = openapi.Parameter('start_code', openapi.IN_QUERY, description='start code of your journey', type=openapi.TYPE_NUMBER)
+end_code = openapi.Parameter('end_code', openapi.IN_QUERY, description='end code of your journey', type=openapi.TYPE_NUMBER)
+@swagger_auto_schema(method='GET', manual_parameters=[start_code, end_code])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_ics_code(request, start_code, end_code):
@@ -105,6 +118,9 @@ def get_journey_planner_by_ics_code(request, start_code, end_code):
     return Response(new_dict, status=status.HTTP_200_OK)
 
  
+lat = openapi.Parameter('lat', openapi.IN_QUERY, description='latitude point of your journey', type=openapi.TYPE_NUMBER)
+log = openapi.Parameter('log', openapi.IN_QUERY, description='longitude point of journey', type=openapi.TYPE_NUMBER)
+@swagger_auto_schema(method='GET', manual_parameters=[lat, log])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_geo_and_postcode(request, lat, log):
@@ -135,6 +151,8 @@ def get_all_corridors(request):
     return Response(main_list, status=status.HTTP_200_OK)
 
 
+pk = openapi.Parameter('pk', openapi.IN_QUERY, description="id of corridor", type=openapi.TYPE_STRING)
+@swagger_auto_schema(method='GET', manual_parameters=[pk])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_corridor_by_id(request, pk):
@@ -149,6 +167,7 @@ def get_corridor_by_id(request, pk):
     return Response(corridor, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(method='GET')
 @cache_page(60*15)
 @api_view(['GET'])
 def get_all_disrupted_roads(request):
@@ -164,7 +183,7 @@ def get_all_disrupted_roads(request):
     return Response(main_list, status=status.HTTP_200_OK)
 
 
-
+@swagger_auto_schema(method='GET')
 @cache_page(60*15)
 @api_view(['GET'])
 def get_all_serious_disrupted_roads(request):
@@ -179,8 +198,9 @@ def get_all_serious_disrupted_roads(request):
 
     return Response(new_list, status=status.HTTP_200_OK)
 
-
-# @cache_page(60*15)
+line = openapi.Parameter('line', openapi.IN_QUERY, description="a specific London line ", type=openapi.TYPE_STRING)
+@swagger_auto_schema(method='GET', manual_parameters=['line'])
+@cache_page(60*15)
 @api_view(['GET'])
 def get_one_line(request, line):
     if request.method != 'GET':
