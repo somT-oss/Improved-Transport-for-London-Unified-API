@@ -21,7 +21,7 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Virtual Wallet API",
+      title="Transport London Unified API",
       default_version='unofficial v2',
       description="",
       terms_of_service="https://www.google.com/policies/terms/",

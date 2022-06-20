@@ -78,8 +78,17 @@ def get_bike_points(request):
 
 @cache_page(60*15)
 @api_view(['GET'])
-def get_bike_point_id():
-    pass 
+def get_bike_point_id(request, bike_point_id):
+    connect_to_mongo()
+    if request.method != 'GET':
+        return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
+    cursor = db['bike-point']
+    bike_point = cursor.find_one({"id": bike_point_id})
+    if bike_point == None:
+        return Response({"Message": f"Could not get BikePoint with id {bike_point_id}"}, status=status.HTTP_200_OK)
+    bike_point.pop('_id')
+    return Response(bike_point, status=status.HTTP_200_OK)
+
 
 
 start_point = openapi.Parameter('start_pint', openapi.IN_QUERY, description='start point of your journey', type=openapi.TYPE_NUMBER)
