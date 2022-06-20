@@ -198,8 +198,8 @@ def get_all_serious_disrupted_roads(request):
 
     return Response(new_list, status=status.HTTP_200_OK)
 
-line = openapi.Parameter('line', openapi.IN_QUERY, description="a specific London line ", type=openapi.TYPE_STRING)
-@swagger_auto_schema(method='GET', manual_parameters=['line'])
+line = openapi.Parameter('line', openapi.IN_QUERY, description="a specific London line", type=openapi.TYPE_STRING)
+@swagger_auto_schema(method='GET', manual_parameters=[line])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_one_line(request, line):
