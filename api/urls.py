@@ -7,6 +7,7 @@ urlpatterns = [
     path('accident-stats/<str:year>', views.get_accidents_stats, name='accident-stats'),
     path('accident-stats/<int:year>/range/<int:start_range>/<int:end_range>', views.get_accidents_stats_with_range, name='accident-stats-with-range'),
     path('all-bike-points', views.get_bike_points, name='all-bike-points'),
+    path('get-one-bike-point/<str:bike_point_id>', views.get_one_bike_point, name='get-one-bike-point'),
     path('journey-planner-by-points/<int:start_point>/<int:end_point>', views.get_journey_planner_by_points, name="journey-planner-by-points"),
     path('journey-planner-by-ics-code/<int:stop_point>/<int:ics_code>', views.get_journey_planner_by_ics_code, name='journey-planner-by-ics-points'),
     path('journey-planner-by-geocode/<int:lat>,<int:log>/<str:post_code>', views.get_journey_planner_by_geo_and_postcode, name='journey-planner-by-lat-and-log'),

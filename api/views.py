@@ -83,7 +83,7 @@ bike_id = openapi.Parameter('bike_point_id', openapi.IN_QUERY, description='id f
 @swagger_auto_schema(method='GET', manual_parameters=[bike_id])
 @cache_page(60*15)
 @api_view(['GET'])
-def get_bike_point_id(request, bike_point_id):
+def get_one_bike_point(request, bike_point_id):
     connect_to_mongo()
     if request.method != 'GET':
         return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
