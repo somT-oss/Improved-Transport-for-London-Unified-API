@@ -21,9 +21,10 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Transport London Unified API",
-      default_version='unofficial v2',
-      description="",
+      title="Improved Transport London Unified API",
+      default_version='v1',
+      description="This is an improved API, built off of the Transport for London Unified API.\
+                    For Linode X Hashnode Hackhathon ",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="somtochukwuuchegbu@gmail.com"),
       license=openapi.License(name="BSD License"),

@@ -7,13 +7,16 @@ from rest_framework import status
 from pymongo import MongoClient
 import requests
 import json 
+import os
 
+
+# f'mongodb://{os.environ.get("USER")}:{os.environ.get("PASSWORD")}@{os.environ.get("SERVER")}'\
+#         '/?authMechanism=DEFAULT&tls=true&'\
+#         'tlsCAFile=./app-db-ca-certificate.crt'
 
 
 def connect_to_mongo():
-    URI = 'mongodb://linroot:Zro65y7El49a93pa@lin-4624-9732.servers.'\
-        'linodedb.net/?authMechanism=DEFAULT&tls=true&'\
-        'tlsCAFile=./app-db-ca-certificate.crt'
+    URI = 'mongodb://linroot:Zro65y7El49a93pa@lin-4624-9732.servers.linodedb.net/?authMechanism=DEFAULT&tls=true&tlsCAFile=/home/somtochukwu/Downloads/app-db-ca-certificate.crt'
 
     cluster = MongoClient(URI)
     global db
@@ -76,6 +79,8 @@ def get_bike_points(request):
     return Response(main_list, status=status.HTTP_200_OK)
 
 
+bike_id = openapi.Parameter('bike_point_id', openapi.IN_QUERY, description='id for a particular bikepoint', type=openapi.TYPE_STRING)
+@swagger_auto_schema(method='GET', manual_parameters=[bike_id])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_bike_point_id(request, bike_point_id):
@@ -91,8 +96,8 @@ def get_bike_point_id(request, bike_point_id):
 
 
 
-start_point = openapi.Parameter('start_pint', openapi.IN_QUERY, description='start point of your journey', type=openapi.TYPE_NUMBER)
-end_point = openapi.Parameter('end_point', openapi.IN_QUERY, description='end point of your journey', type=openapi.TYPE_NUMBER)
+start_point = openapi.Parameter('start_pint', openapi.IN_QUERY, description='start point of your journey', type=openapi.TYPE_STRING)
+end_point = openapi.Parameter('end_point', openapi.IN_QUERY, description='end point of your journey', type=openapi.TYPE_STRING)
 @swagger_auto_schema(method='GET', manual_parameters=[start_point, end_point])
 @cache_page(60*15)
 @api_view(['GET'])
@@ -109,15 +114,15 @@ def get_journey_planner_by_points(request, start_point, end_point):
     return Response(new_dict, status=status.HTTP_200_OK)
 
 
-start_code = openapi.Parameter('start_code', openapi.IN_QUERY, description='start code of your journey', type=openapi.TYPE_NUMBER)
-end_code = openapi.Parameter('end_code', openapi.IN_QUERY, description='end code of your journey', type=openapi.TYPE_NUMBER)
-@swagger_auto_schema(method='GET', manual_parameters=[start_code, end_code])
+stop_point = openapi.Parameter('stop_point', openapi.IN_QUERY, description='stop point of your journey', type=openapi.TYPE_NUMBER)
+ics_code = openapi.Parameter('end_code', openapi.IN_QUERY, description='ics code of your journey', type=openapi.TYPE_NUMBER)
+@swagger_auto_schema(method='GET', manual_parameters=[stop_point, ics_code])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_ics_code(request, start_code, end_code):
     if request.method != 'GET':
         return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
-    url = f'https://api.tfl.gov.uk/journey/journeyresults/{start_code}/to/{end_code}'
+    url = f'https://api.tfl.gov.uk/journey/journeyresults/{stop_point}/to/{ics_code}'
     r = requests.get(url)
     if r.status_code != 200:
         return Response({"Error": f"Could not get information on how to plan a route from {start_code} to {end_code}"}, status=status.HTTP_200_OK)
@@ -129,13 +134,14 @@ def get_journey_planner_by_ics_code(request, start_code, end_code):
  
 lat = openapi.Parameter('lat', openapi.IN_QUERY, description='latitude point of your journey', type=openapi.TYPE_NUMBER)
 log = openapi.Parameter('log', openapi.IN_QUERY, description='longitude point of journey', type=openapi.TYPE_NUMBER)
-@swagger_auto_schema(method='GET', manual_parameters=[lat, log])
+post_code = openapi.Parameter('log', openapi.IN_QUERY, description='post code of journey', type=openapi.TYPE_STRING)
+@swagger_auto_schema(method='GET', manual_parameters=[lat, log, post_code])
 @cache_page(60*15)
 @api_view(['GET'])
-def get_journey_planner_by_geo_and_postcode(request, lat, log):
+def get_journey_planner_by_geo_and_postcode(request, lat, log, post_code):
     if request.method != 'GET':
         return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
-    url = f'https://api.tfl.gov.uk/journey/journeyresults/{lat}/to/{log}'
+    url = f'https://api.tfl.gov.uk/journey/journeyresults/{lat},{log}/to/{post_code}'
     r = requests.get(url)
     if r.status_code != 200:
         return Response({"Error": f"Could not get information on how to plan a route from {lat} to {log}"}, status=status.HTTP_200_OK)
