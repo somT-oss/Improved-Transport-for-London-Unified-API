@@ -96,8 +96,8 @@ def get_bike_point_id(request, bike_point_id):
 
 
 
-start_point = openapi.Parameter('start_pint', openapi.IN_QUERY, description='start point of your journey', type=openapi.TYPE_STRING)
-end_point = openapi.Parameter('end_point', openapi.IN_QUERY, description='end point of your journey', type=openapi.TYPE_STRING)
+start_point = openapi.Parameter('start_pint', openapi.IN_QUERY, description='start point of your journey', type=openapi.TYPE_NUMBER)
+end_point = openapi.Parameter('end_point', openapi.IN_QUERY, description='end point of your journey', type=openapi.TYPE_NUMBER)
 @swagger_auto_schema(method='GET', manual_parameters=[start_point, end_point])
 @cache_page(60*15)
 @api_view(['GET'])
@@ -119,13 +119,13 @@ ics_code = openapi.Parameter('end_code', openapi.IN_QUERY, description='ics code
 @swagger_auto_schema(method='GET', manual_parameters=[stop_point, ics_code])
 @cache_page(60*15)
 @api_view(['GET'])
-def get_journey_planner_by_ics_code(request, start_code, end_code):
+def get_journey_planner_by_ics_code(request, stop_point, ics_code):
     if request.method != 'GET':
         return Response({"Error": "Invalid Request Type"}, status=status.HTTP_400_BAD_REQUEST)
     url = f'https://api.tfl.gov.uk/journey/journeyresults/{stop_point}/to/{ics_code}'
     r = requests.get(url)
     if r.status_code != 200:
-        return Response({"Error": f"Could not get information on how to plan a route from {start_code} to {end_code}"}, status=status.HTTP_200_OK)
+        return Response({"Error": f"Could not get information on how to plan a route from {stop_point} to {ics_code}"}, status=status.HTTP_200_OK)
     text = r.text 
     new_dict = json.loads(text)
     
@@ -133,9 +133,9 @@ def get_journey_planner_by_ics_code(request, start_code, end_code):
 
  
 lat = openapi.Parameter('lat', openapi.IN_QUERY, description='latitude point of your journey', type=openapi.TYPE_NUMBER)
-log = openapi.Parameter('log', openapi.IN_QUERY, description='longitude point of journey', type=openapi.TYPE_NUMBER)
+logi = openapi.Parameter('logi', openapi.IN_QUERY, description='longitude point of journey', type=openapi.TYPE_NUMBER)
 post_code = openapi.Parameter('log', openapi.IN_QUERY, description='post code of journey', type=openapi.TYPE_STRING)
-@swagger_auto_schema(method='GET', manual_parameters=[lat, log, post_code])
+@swagger_auto_schema(method='GET', manual_parameters=[lat, logi, post_code])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_journey_planner_by_geo_and_postcode(request, lat, log, post_code):
@@ -144,7 +144,7 @@ def get_journey_planner_by_geo_and_postcode(request, lat, log, post_code):
     url = f'https://api.tfl.gov.uk/journey/journeyresults/{lat},{log}/to/{post_code}'
     r = requests.get(url)
     if r.status_code != 200:
-        return Response({"Error": f"Could not get information on how to plan a route from {lat} to {log}"}, status=status.HTTP_200_OK)
+        return Response({"Error": f"Could not get information on how to plan a route from {lat},{log} to {post_code}"}, status=status.HTTP_200_OK)
     text = r.text 
     new_dict = json.loads(text)
 
