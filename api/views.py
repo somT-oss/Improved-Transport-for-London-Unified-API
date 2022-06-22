@@ -16,7 +16,7 @@ import os
 
 
 def connect_to_mongo():
-    URI = 'mongodb://linroot:Zro65y7El49a93pa@lin-4624-9732.servers.linodedb.net/?authMechanism=DEFAULT&tls=true&tlsCAFile=/home/somtochukwu/Downloads/app-db-ca-certificate.crt'
+    URI = f'mongodb://{os.environ.get("NEWUSER")}:{os.environ.get("NEWPASSWORD")}@{os.environ.get("SERVER")}/?authMechanism=DEFAULT&tls=true&tlsCAFile=/home/somtochukwu/Downloads/app-db-ca-certificate.crt'
 
     cluster = MongoClient(URI)
     global db
