@@ -14,7 +14,7 @@ You can checkout my blog post where I described my thought process on how I hand
 
 ## Tooling 
  - Django rest framework 
- - MongoDB 
+ - MongoDB Cloud Cluster   
  - Django rest framework simplejwt (Token Authentication)
  - Postman
  - Linode Linux server
@@ -24,7 +24,7 @@ You can checkout my blog post where I described my thought process on how I hand
 Here are some of the endpoints I have worked on
  - Get Yearly Accident Stats ```http://172.105.148.112/v2/api/accident-stats/{year}```
  - Get Yearly Accident Stats with range ```http://172.105.148.112/v2/api/accident-stats/{year}/range/{star t_range}/{end_range}```
- - GetAll BikePoints ```http://172.105.148.112/v2/api/all-bike-points```
+ - Get All BikePoints ```http://172.105.148.112/v2/api/all-bike-points```
  - Get One BikePoint ```http://172.105.148.112/v2/api/get-one-bike-point/{bike_pont_id}```
 
-**This project is in line for the [Linode](https://cloud.linode.com) X [Hashnode](https://hashnode.com) Hackathon**
+**This project was built for the [Linode](https://cloud.linode.com) X [Hashnode](https://hashnode.com) Hackathon**
