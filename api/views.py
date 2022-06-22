@@ -10,11 +10,6 @@ import json
 import os
 
 
-# f'mongodb://{os.environ.get("USER")}:{os.environ.get("PASSWORD")}@{os.environ.get("SERVER")}'\
-#         '/?authMechanism=DEFAULT&tls=true&'\
-#         'tlsCAFile=./app-db-ca-certificate.crt'
-
-
 def connect_to_mongo():
     URI = f'mongodb://{os.environ.get("NEWUSER")}:{os.environ.get("NEWPASSWORD")}@{os.environ.get("SERVER")}/?authMechanism=DEFAULT&tls=true&tlsCAFile=/home/somtochukwu/Downloads/app-db-ca-certificate.crt'
 
