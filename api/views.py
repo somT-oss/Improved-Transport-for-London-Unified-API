@@ -24,14 +24,14 @@ def connect_to_mongo():
     print("Connected to mongo successfully")
 
 
-year = openapi.Parameter('test', openapi.IN_QUERY, description="year parameter for accident stats", type=openapi.TYPE_STRING)
+year = openapi.Parameter('year', openapi.IN_QUERY, description="year parameter for accident stats", type=openapi.TYPE_STRING)
 @swagger_auto_schema(method='GET', manual_parameters=[year])
 @cache_page(60*15)
 @api_view(['GET'])
 def get_accidents_stats(request, year):
     connect_to_mongo()
     if request.method != 'GET':
-        return Response({"Error": "Invalid Response Type"})
+        return Response({"Error": "Invalid Response Type"}, status=status.HTTP_400_BAD_REQUEST)
     cursor_list = [cursor for cursor in db.list_collection_names()]
     print(cursor_list)
     if year not in cursor_list:
